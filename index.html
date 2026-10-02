@@ -202,19 +202,51 @@
   .proof-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-top:22px;}
   .highlights{display:flex;flex-wrap:wrap;gap:10px;margin:0;padding:0;list-style:none;}
 
-  /* galeria: artes do Instagram da própria empresa, sempre inteiras (sem corte). Celular: carrossel; computador: linha com a mesma altura */
-  .gallery{display:flex;align-items:center;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin:0;padding:0 0 10px;list-style:none;}
-  .gallery li{flex:0 0 auto;width:min(78vw,320px);scroll-snap-align:start;margin:0;}
-  .gallery a{display:block;border-radius:14px;overflow:hidden;background:#0d0e0d;border:1px solid var(--line);}
-  .gallery img{width:100%;height:auto;display:block;transition:transform .5s ease;}
-  .gallery a:hover img{transform:scale(1.02);}
-  .gallery-hint{display:none;margin-top:10px;font-family:var(--cond);font-weight:600;font-size:13px;color:var(--muted);}
-  @media(max-width:899px){.gallery-hint{display:block;}}
+  /* vitrine: artes do Instagram da própria empresa. Quadro 4:5 igual pra todas, arte inteira (sem corte), fundo desfocado da própria arte.
+     Celular: carrossel com pontos. Computador: 4 colunas. Toque/clique amplia. */
+  .gallery-wrap{position:relative;}
+  .gallery{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin:0 -20px;padding:6px 20px 18px;scroll-padding-inline:20px;list-style:none;scrollbar-width:none;}
+  .gallery::-webkit-scrollbar{display:none;}
+  .gallery li{flex:0 0 auto;width:min(74vw,300px);scroll-snap-align:start;margin:0;}
+  .g-card{display:block;width:100%;padding:0;margin:0;border:0;background:none;font:inherit;color:inherit;text-align:left;cursor:zoom-in;}
+  .g-frame{position:relative;display:block;aspect-ratio:4/5;border-radius:18px;overflow:hidden;background:#0c0c0c;box-shadow:0 22px 44px -26px rgba(0,0,0,.6);}
+  .g-frame::before{content:"";position:absolute;inset:-26px;background:var(--bg) center/cover no-repeat;filter:blur(24px) brightness(.5) saturate(1.2);}
+  .g-frame picture{position:relative;display:block;width:100%;height:100%;}
+  .g-frame img{position:relative;display:block;width:100%;height:100%;object-fit:contain;transition:transform .45s ease;}
+  .g-card:hover .g-frame img{transform:scale(1.025);}
+  .g-zoom{position:absolute;right:10px;top:10px;z-index:2;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:rgba(12,12,12,.7);color:#fff;border-radius:50%;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);transition:background-color .15s ease;}
+  .g-card:hover .g-zoom{background:var(--green-deep);}
+  .g-zoom svg{width:17px;height:17px;}
+  .g-cap{display:block;padding:12px 4px 0;}
+  .g-cap b{display:block;font-family:var(--cond);font-weight:700;font-size:17px;color:var(--ink);line-height:1.2;}
+  .g-cap small{display:block;font-size:13.5px;color:var(--muted);margin-top:2px;line-height:1.4;}
+  .g-card:focus-visible{outline:3px solid var(--ink);outline-offset:4px;border-radius:18px;}
+  .gallery-dots{display:flex;justify-content:center;gap:4px;margin-top:2px;}
+  .gallery-dots button{width:28px;height:28px;padding:0;border:0;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .gallery-dots button::before{content:"";width:8px;height:8px;border-radius:50%;background:rgba(12,12,12,.22);transition:width .2s ease, background-color .2s ease;}
+  .gallery-dots button[aria-current="true"]::before{width:22px;border-radius:999px;background:var(--green-deep);}
+  .gallery-foot{margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 18px;}
+  .gallery-hint{font-family:var(--cond);font-weight:600;font-size:13px;color:var(--muted);}
   @media(min-width:900px){
-    .gallery{overflow:visible;gap:16px;padding:0;align-items:flex-start;}
-    .gallery li{flex:var(--r) 1 0;width:auto;min-width:0;}
+    .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;overflow:visible;margin:0;padding:6px 0 0;}
+    .gallery li{width:auto;}
+    .gallery-dots{display:none;}
   }
-  .gallery-foot{margin-top:18px;}
+
+  /* ampliar: janela com a arte em tamanho maior */
+  dialog.lb{border:0;padding:0;background:transparent;max-width:100vw;max-height:100vh;width:100vw;height:100vh;overflow:hidden;}
+  dialog.lb::backdrop{background:rgba(5,8,6,.9);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);}
+  .lb-inner{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 16px 22px;gap:14px;}
+  .lb-img{max-width:min(94vw,720px);max-height:calc(100vh - 170px);width:auto;height:auto;border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.6);background:#0c0c0c;}
+  .lb-cap{color:#e9efe9;text-align:center;font-family:var(--cond);font-size:15px;line-height:1.35;max-width:60ch;}
+  .lb-cap b{display:block;font-size:18px;color:#fff;}
+  .lb-btn{position:absolute;width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.12);color:#fff;font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .lb-btn:hover{background:rgba(255,255,255,.24);}
+  .lb-btn:focus-visible{outline:3px solid var(--green-lite);outline-offset:3px;}
+  .lb-close{top:max(12px,env(safe-area-inset-top));right:14px;}
+  .lb-prev{left:10px;top:50%;transform:translateY(-50%);}
+  .lb-next{right:10px;top:50%;transform:translateY(-50%);}
+  @media(max-width:599px){.lb-prev,.lb-next{top:auto;bottom:14px;transform:none;}.lb-prev{left:16px;}.lb-next{right:16px;}.lb-inner{padding-bottom:78px;}}
 
   .steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:16px;counter-reset:s;}
   @media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr);}}
@@ -564,14 +596,31 @@
       <h2 class="title" id="t-insta">Como a Menezes trabalha</h2>
       <p class="lede">Artes publicadas pela própria empresa: controle de pragas urbanas, caixa d'água com antes e depois, cupins e morcegos, desentupimento.</p>
     </div>
-    <ul class="gallery reveal">
-      <li style="--r:0.8"><a href="https://www.instagram.com/dedetizadoramenezes/" target="_blank" rel="noopener"><picture><source srcset="img/insta-controle-urbano.webp" type="image/webp"><img src="img/insta-controle-urbano.jpg" width="512" height="640" loading="lazy" decoding="async" alt="Arte da Menezes: controle de pragas urbanas, com caminhão da empresa e a frase atendimentos em todo RS"></picture></a></li>
-      <li style="--r:1"><a href="https://www.instagram.com/dedetizadoramenezes/" target="_blank" rel="noopener"><picture><source srcset="img/insta-caixa-dagua.webp" type="image/webp"><img src="img/insta-caixa-dagua.jpg" width="640" height="640" loading="lazy" decoding="async" alt="Arte da Menezes: antes e depois de caixa d'água limpa"></picture></a></li>
-      <li style="--r:0.6586"><a href="https://www.instagram.com/dedetizadoramenezes/" target="_blank" rel="noopener"><picture><source srcset="img/insta-descupinizacao.webp" type="image/webp"><img src="img/insta-descupinizacao.jpg" width="355" height="539" loading="lazy" decoding="async" alt="Arte da Menezes: manejo de morcegos e descupinização, antes, durante e depois"></picture></a></li>
-      <li style="--r:1"><a href="https://www.instagram.com/dedetizadoramenezes/" target="_blank" rel="noopener"><picture><source srcset="img/insta-desentupimento.webp" type="image/webp"><img src="img/insta-desentupimento.jpg" width="640" height="640" loading="lazy" decoding="async" alt="Arte da Menezes: desentupimento com caminhão de sucção e hidrojateamento"></picture></a></li>
-    </ul>
-    <p class="gallery-hint" aria-hidden="true">Deslize para ver mais →</p>
-    <p class="gallery-foot reveal"><a class="link-arrow" href="https://www.instagram.com/dedetizadoramenezes/" target="_blank" rel="noopener">Ver mais em @dedetizadoramenezes</a></p>
+    <div class="gallery-wrap reveal">
+      <ul class="gallery" id="gallery" aria-label="Artes publicadas no Instagram da Menezes">
+      <li><button type="button" class="g-card" data-i="0" data-src="img/insta-controle-urbano.jpg" data-alt="Arte da Menezes: controle de pragas urbanas, com o caminhão da empresa e a frase atendimentos em todo RS" data-t="Controle de pragas urbanas" data-d="Para residências, comércios e indústrias" aria-label="Ampliar: Controle de pragas urbanas">
+        <span class="g-frame" style="--bg:url('img/insta-controle-urbano.webp')"><picture><source srcset="img/insta-controle-urbano.webp" type="image/webp"><img src="img/insta-controle-urbano.jpg" width="512" height="640" loading="lazy" decoding="async" alt="Arte da Menezes: controle de pragas urbanas, com o caminhão da empresa e a frase atendimentos em todo RS"></picture><span class="g-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5M11 8.5v5M8.5 11h5"/></svg></span></span>
+        <span class="g-cap"><b>Controle de pragas urbanas</b><small>Para residências, comércios e indústrias</small></span>
+      </button></li>
+      <li><button type="button" class="g-card" data-i="1" data-src="img/insta-caixa-dagua.jpg" data-alt="Arte da Menezes: antes e depois de caixa d'água limpa" data-t="Caixa d'água, antes e depois" data-d="Limpeza e higienização de reservatórios" aria-label="Ampliar: Caixa d'água, antes e depois">
+        <span class="g-frame" style="--bg:url('img/insta-caixa-dagua.webp')"><picture><source srcset="img/insta-caixa-dagua.webp" type="image/webp"><img src="img/insta-caixa-dagua.jpg" width="640" height="640" loading="lazy" decoding="async" alt="Arte da Menezes: antes e depois de caixa d'água limpa"></picture><span class="g-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5M11 8.5v5M8.5 11h5"/></svg></span></span>
+        <span class="g-cap"><b>Caixa d'água, antes e depois</b><small>Limpeza e higienização de reservatórios</small></span>
+      </button></li>
+      <li><button type="button" class="g-card" data-i="2" data-src="img/insta-descupinizacao-2.jpg" data-alt="Arte da Menezes: manejo de morcegos e descupinização, antes, durante e depois" data-t="Morcegos e descupinização" data-d="Antes, durante e pós, com proteção completa" aria-label="Ampliar: Morcegos e descupinização">
+        <span class="g-frame" style="--bg:url('img/insta-descupinizacao-2.webp')"><picture><source srcset="img/insta-descupinizacao-2.webp" type="image/webp"><img src="img/insta-descupinizacao-2.jpg" width="355" height="539" loading="lazy" decoding="async" alt="Arte da Menezes: manejo de morcegos e descupinização, antes, durante e depois"></picture><span class="g-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5M11 8.5v5M8.5 11h5"/></svg></span></span>
+        <span class="g-cap"><b>Morcegos e descupinização</b><small>Antes, durante e pós, com proteção completa</small></span>
+      </button></li>
+      <li><button type="button" class="g-card" data-i="3" data-src="img/insta-desentupimento.jpg" data-alt="Arte da Menezes: desentupimento com caminhão de sucção e hidrojateamento" data-t="Desentupimento" data-d="Com sucção e hidrojateamento" aria-label="Ampliar: Desentupimento">
+        <span class="g-frame" style="--bg:url('img/insta-desentupimento.webp')"><picture><source srcset="img/insta-desentupimento.webp" type="image/webp"><img src="img/insta-desentupimento.jpg" width="640" height="640" loading="lazy" decoding="async" alt="Arte da Menezes: desentupimento com caminhão de sucção e hidrojateamento"></picture><span class="g-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5M11 8.5v5M8.5 11h5"/></svg></span></span>
+        <span class="g-cap"><b>Desentupimento</b><small>Com sucção e hidrojateamento</small></span>
+      </button></li>
+      </ul>
+      <div class="gallery-dots"><button type="button" data-dot="0" aria-label="Ir para a arte 1 de 4" aria-current="true"></button><button type="button" data-dot="1" aria-label="Ir para a arte 2 de 4"></button><button type="button" data-dot="2" aria-label="Ir para a arte 3 de 4"></button><button type="button" data-dot="3" aria-label="Ir para a arte 4 de 4"></button></div>
+    </div>
+    <div class="gallery-foot reveal">
+      <a class="link-arrow" href="https://www.instagram.com/dedetizadoramenezes/" target="_blank" rel="noopener">Ver mais em @dedetizadoramenezes</a>
+      <span class="gallery-hint">Toque numa arte para ampliar</span>
+    </div>
   </div>
 </section>
 
@@ -688,8 +737,8 @@
           <div class="tag2"><span aria-hidden="true">✓</span> O que deveria estar ali</div>
           <div class="shot">
             <picture>
-              <source srcset="img/proposta-celular.webp" type="image/webp">
-              <img src="img/proposta-celular.jpg" width="420" height="700" loading="lazy" decoding="async" alt="Esta página aberta no celular, com o logo da Menezes e o botão de WhatsApp">
+              <source srcset="img/proposta-celular-2.webp" type="image/webp">
+              <img src="img/proposta-celular-2.jpg" width="420" height="700" loading="lazy" decoding="async" alt="Esta página aberta no celular, com o logo da Menezes e o botão de WhatsApp">
             </picture>
           </div>
           <figcaption>Pronta pra publicar no mesmo endereço.</figcaption>
@@ -782,6 +831,16 @@
   </a>
 </div>
 
+<dialog class="lb" id="lb" aria-label="Arte ampliada">
+  <div class="lb-inner">
+    <button type="button" class="lb-btn lb-close" aria-label="Fechar">&times;</button>
+    <button type="button" class="lb-btn lb-prev" aria-label="Arte anterior">&#8249;</button>
+    <button type="button" class="lb-btn lb-next" aria-label="Próxima arte">&#8250;</button>
+    <div class="lb-stage"></div>
+    <p class="lb-cap" aria-live="polite"></p>
+  </div>
+</dialog>
+
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-wa" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 1 1-2.9-.2-.3A8 8 0 1 1 12 20Zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1s-.6.8-.7.9-.3.2-.5.1a6.6 6.6 0 0 1-1.9-1.2 7.2 7.2 0 0 1-1.3-1.6c-.1-.2 0-.4.1-.5l.4-.4.2-.4a.5.5 0 0 0 0-.4c-.1-.1-.5-1.3-.7-1.8s-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.7 2.7 0 0 0-.8 2 4.7 4.7 0 0 0 1 2.5 10.6 10.6 0 0 0 4.1 3.6c1.4.6 2 .7 2.4.6a2 2 0 0 0 1.3-.9 1.6 1.6 0 0 0 .1-1c-.1-.1-.2-.2-.4-.3Z"/></symbol>
   <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 22s7-6.3 7-12A7 7 0 0 0 5 10c0 5.7 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
@@ -833,6 +892,43 @@
     } else {
       document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
     }
+
+
+    // vitrine: pontos do carrossel e janela de ampliação
+    (function(){
+      var g = document.getElementById('gallery'); if(!g) return;
+      var cards = [].slice.call(g.querySelectorAll('.g-card'));
+      var dots = [].slice.call(document.querySelectorAll('.gallery-dots [data-dot]'));
+      if('IntersectionObserver' in window){
+        var dObs = new IntersectionObserver(function(en){
+          en.forEach(function(e){
+            if(e.isIntersecting){ var i = cards.indexOf(e.target.querySelector('.g-card')); dots.forEach(function(d,k){ d.setAttribute('aria-current', k===i ? 'true' : 'false'); }); }
+          });
+        }, {root:g, threshold:0.6});
+        [].forEach.call(g.children, function(li){ dObs.observe(li); });
+      }
+      dots.forEach(function(d,k){ d.addEventListener('click', function(){ g.children[k].scrollIntoView({behavior:'smooth', inline:'start', block:'nearest'}); }); });
+
+      var lb = document.getElementById('lb'), stage = lb.querySelector('.lb-stage'), cap = lb.querySelector('.lb-cap'), cur = 0, opener = null;
+      function show(i){
+        cur = (i + cards.length) % cards.length;
+        var c = cards[cur], im = stage.querySelector('img');
+        if(!im){ im = document.createElement('img'); im.className = 'lb-img'; stage.appendChild(im); }
+        im.src = c.getAttribute('data-src'); im.alt = c.getAttribute('data-alt');
+        cap.innerHTML = ''; var b = document.createElement('b'); b.textContent = c.getAttribute('data-t'); cap.appendChild(b); cap.appendChild(document.createTextNode(c.getAttribute('data-d')));
+      }
+      cards.forEach(function(c,i){ c.addEventListener('click', function(){
+        if(typeof lb.showModal !== 'function'){ window.open(c.getAttribute('data-src'), '_blank'); return; }
+        opener = c; show(i); lb.showModal(); document.documentElement.style.overflow = 'hidden';
+      }); });
+      function close(){ lb.close(); }
+      lb.querySelector('.lb-close').addEventListener('click', close);
+      lb.querySelector('.lb-prev').addEventListener('click', function(){ show(cur-1); });
+      lb.querySelector('.lb-next').addEventListener('click', function(){ show(cur+1); });
+      lb.addEventListener('click', function(e){ if(e.target === lb || e.target.classList.contains('lb-inner') || e.target.classList.contains('lb-stage')) close(); });
+      lb.addEventListener('close', function(){ document.documentElement.style.overflow = ''; if(opener) opener.focus(); });
+      lb.addEventListener('keydown', function(e){ if(e.key === 'ArrowLeft') show(cur-1); if(e.key === 'ArrowRight') show(cur+1); });
+    })();
 
     // aviso de abertura (api/aberto.js). Abrir uma vez com ?eu marca este navegador como seu e ele não avisa mais.
     try{
