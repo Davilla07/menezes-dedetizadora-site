@@ -202,13 +202,20 @@
   .proof-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-top:22px;}
   .highlights{display:flex;flex-wrap:wrap;gap:10px;margin:0;padding:0;list-style:none;}
 
-  /* galeria: artes do Instagram da própria empresa */
-  .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:0;padding:0;list-style:none;}
-  @media(min-width:900px){.gallery{grid-template-columns:repeat(4,1fr);gap:16px;}}
-  .gallery li{margin:0;}
-  .gallery a{display:block;border-radius:14px;overflow:hidden;background:#0d0e0d;border:1px solid var(--line);}
-  .gallery img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top;transition:transform .5s ease;}
-  .gallery a:hover img{transform:scale(1.03);}
+  /* galeria: artes do Instagram da própria empresa, sempre inteiras (sem corte). Celular: carrossel; computador: linha com a mesma altura */
+  .gallery{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin:0;padding:0 0 10px;list-style:none;}
+  .gallery li{flex:0 0 auto;height:400px;scroll-snap-align:start;margin:0;}
+  .gallery a{display:block;height:100%;border-radius:14px;overflow:hidden;background:#0d0e0d;border:1px solid var(--line);}
+  .gallery img{height:100%;width:auto;max-width:none;display:block;transition:transform .5s ease;}
+  .gallery a:hover img{transform:scale(1.02);}
+  .gallery-hint{display:none;margin-top:10px;font-family:var(--cond);font-weight:600;font-size:13px;color:var(--muted);}
+  @media(max-width:899px){.gallery-hint{display:block;}}
+  @media(min-width:900px){
+    .gallery{overflow:visible;gap:16px;padding:0;}
+    .gallery li{flex:var(--r) 1 0;height:auto;min-width:0;}
+    .gallery a{height:auto;}
+    .gallery img{width:100%;height:auto;}
+  }
   .gallery-foot{margin-top:18px;}
 
   .steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:16px;counter-reset:s;}
@@ -560,11 +567,12 @@
       <p class="lede">Artes publicadas pela própria empresa: controle de pragas urbanas, caixa d'água com antes e depois, cupins e morcegos, desentupimento.</p>
     </div>
     <ul class="gallery reveal">
-      <li><a href="https://www.instagram.com/dedetizadoramenezes/" target="_blank" rel="noopener"><picture><source srcset="img/insta-controle-urbano.webp" type="image/webp"><img src="img/insta-controle-urbano.jpg" width="512" height="640" loading="lazy" decoding="async" alt="Arte da Menezes: controle de pragas urbanas, com caminhão da empresa e a frase atendimentos em todo RS"></picture></a></li>
-      <li><a href="https://www.instagram.com/dedetizadoramenezes/" target="_blank" rel="noopener"><picture><source srcset="img/insta-caixa-dagua.webp" type="image/webp"><img src="img/insta-caixa-dagua.jpg" width="640" height="640" loading="lazy" decoding="async" alt="Arte da Menezes: antes e depois de caixa d'água limpa"></picture></a></li>
-      <li><a href="https://www.instagram.com/dedetizadoramenezes/" target="_blank" rel="noopener"><picture><source srcset="img/insta-descupinizacao.webp" type="image/webp"><img src="img/insta-descupinizacao.jpg" width="360" height="640" loading="lazy" decoding="async" alt="Arte da Menezes: manejo de morcegos e descupinização, antes, durante e depois"></picture></a></li>
-      <li><a href="https://www.instagram.com/dedetizadoramenezes/" target="_blank" rel="noopener"><picture><source srcset="img/insta-desentupimento.webp" type="image/webp"><img src="img/insta-desentupimento.jpg" width="640" height="640" loading="lazy" decoding="async" alt="Arte da Menezes: desentupimento com caminhão de sucção e hidrojateamento"></picture></a></li>
+      <li style="--r:0.8"><a href="https://www.instagram.com/dedetizadoramenezes/" target="_blank" rel="noopener"><picture><source srcset="img/insta-controle-urbano.webp" type="image/webp"><img src="img/insta-controle-urbano.jpg" width="512" height="640" loading="lazy" decoding="async" alt="Arte da Menezes: controle de pragas urbanas, com caminhão da empresa e a frase atendimentos em todo RS"></picture></a></li>
+      <li style="--r:1"><a href="https://www.instagram.com/dedetizadoramenezes/" target="_blank" rel="noopener"><picture><source srcset="img/insta-caixa-dagua.webp" type="image/webp"><img src="img/insta-caixa-dagua.jpg" width="640" height="640" loading="lazy" decoding="async" alt="Arte da Menezes: antes e depois de caixa d'água limpa"></picture></a></li>
+      <li style="--r:0.5625"><a href="https://www.instagram.com/dedetizadoramenezes/" target="_blank" rel="noopener"><picture><source srcset="img/insta-descupinizacao.webp" type="image/webp"><img src="img/insta-descupinizacao.jpg" width="360" height="640" loading="lazy" decoding="async" alt="Arte da Menezes: manejo de morcegos e descupinização, antes, durante e depois"></picture></a></li>
+      <li style="--r:1"><a href="https://www.instagram.com/dedetizadoramenezes/" target="_blank" rel="noopener"><picture><source srcset="img/insta-desentupimento.webp" type="image/webp"><img src="img/insta-desentupimento.jpg" width="640" height="640" loading="lazy" decoding="async" alt="Arte da Menezes: desentupimento com caminhão de sucção e hidrojateamento"></picture></a></li>
     </ul>
+    <p class="gallery-hint" aria-hidden="true">Deslize para ver mais →</p>
     <p class="gallery-foot reveal"><a class="link-arrow" href="https://www.instagram.com/dedetizadoramenezes/" target="_blank" rel="noopener">Ver mais em @dedetizadoramenezes</a></p>
   </div>
 </section>
