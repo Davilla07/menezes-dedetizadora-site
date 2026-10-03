@@ -1004,6 +1004,8 @@
     })();
 
     // aviso de abertura (api/aberto.js). Abrir uma vez com ?eu marca este navegador como seu e ele não avisa mais.
+    // O aviso só sai depois de um sinal humano (toque, rolagem ou tecla). Ao sair da página vai um resumo
+    // (tempo, até onde rolou, se chegou na proposta, toques no WhatsApp). Toque no botão da Evolue avisa na hora.
     try{
       var params = new URLSearchParams(location.search);
       if(params.has('eu')){
@@ -1011,10 +1013,57 @@
         history.replaceState(null,'',location.pathname);
       }
       var ehVoce = localStorage.getItem('evolue-eu') === '1';
-      var ultimo = Number(sessionStorage.getItem('evolue-aviso') || 0);
-      if(!ehVoce && location.protocol === 'https:' && Date.now() - ultimo > 30*60*1000 && navigator.sendBeacon){
-        navigator.sendBeacon('/api/aberto', JSON.stringify({ref: document.referrer}));
-        sessionStorage.setItem('evolue-aviso', String(Date.now()));
+      var seguro = location.protocol === 'https:' || location.hostname === 'localhost';
+      if(!ehVoce && seguro && navigator.sendBeacon){
+        var ativo = false, resumos = 0, ultimaChave = '';
+        var visivelDesde = document.visibilityState === 'visible' ? Date.now() : 0, segundos = 0;
+        var rolou = 0, viuProposta = false, toques = {empresa:0, evolue:0};
+        var enviar = function(obj){ try{ navigator.sendBeacon('/api/aberto', JSON.stringify(obj)); }catch(e){} };
+        var abrir = function(){
+          if(ativo) return;
+          // no máximo uma abertura a cada 30 min por aba, pra recarregar a página não gerar spam
+          var ultimo = Number(sessionStorage.getItem('evolue-aviso') || 0);
+          if(Date.now() - ultimo < 30*60*1000) return;
+          sessionStorage.setItem('evolue-aviso', String(Date.now()));
+          ativo = true;
+          enviar({t:'abertura', ref: document.referrer});
+        };
+        ['pointerdown','touchstart','keydown','wheel'].forEach(function(ev){ addEventListener(ev, abrir, {passive:true, once:true}); });
+        var medir = false;
+        addEventListener('scroll', function(){
+          if(medir) return; medir = true;
+          requestAnimationFrame(function(){
+            medir = false;
+            var de = document.documentElement;
+            if(window.scrollY > 60) abrir();
+            rolou = Math.max(rolou, Math.min(1, (window.scrollY + innerHeight) / de.scrollHeight));
+          });
+        }, {passive:true});
+        var prop = document.getElementById('proposta');
+        if(prop && 'IntersectionObserver' in window){
+          new IntersectionObserver(function(en){ if(en[0].isIntersecting) viuProposta = true; }, {threshold:0.15}).observe(prop);
+        }
+        document.addEventListener('click', function(e){
+          var a = e.target && e.target.closest ? e.target.closest('a[href*="wa.me/"]') : null;
+          if(!a) return;
+          if(/wa\.me\/5553991925951/.test(a.href)){ toques.evolue++; if(ativo) enviar({t:'cta'}); }
+          else { toques.empresa++; }
+        }, true);
+        var resumo = function(){
+          if(!ativo || resumos >= 3) return;
+          var seg = Math.round(segundos + (visivelDesde ? (Date.now() - visivelDesde) / 1000 : 0));
+          var chave = [Math.round(rolou*100), viuProposta, toques.empresa, toques.evolue, Math.floor(seg/5)].join('|');
+          if(chave === ultimaChave) return;
+          ultimaChave = chave; resumos++;
+          enviar({t:'resumo', seg: seg, rolou: Math.round(rolou*100), proposta: viuProposta, wa: toques});
+        };
+        document.addEventListener('visibilitychange', function(){
+          if(document.visibilityState === 'hidden'){
+            resumo();
+            if(visivelDesde){ segundos += (Date.now() - visivelDesde) / 1000; visivelDesde = 0; }
+          } else { visivelDesde = Date.now(); }
+        });
+        addEventListener('pagehide', resumo);
       }
     }catch(e){}
   })();
